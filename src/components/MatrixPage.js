@@ -15,7 +15,7 @@ function MatrixPage () {
     const handleSubmit = async () => {
         console.log("Input : ", matrix);
         try {
-            const response = await fetch("https://grids2backend-b4g7bdhsf2bke8f2.canadacentral-01.azurewebsites.net/storeMatrix", {
+            const response = await fetch("https://node-g8h4gherfbejfqbq.eastus2-01.azurewebsites.net/storeMatrix", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
