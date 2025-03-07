@@ -6,6 +6,7 @@ function MatrixPage () {
     const navigate = useNavigate();
     const [matrix, setMatrix] = useState(Array(5).fill(Array(5).fill("")));
     const [errors, setErrors] = useState(Array(5).fill(Array(5).fill("")));
+    const [submissionError, setSubmissionError] = useState("");
 
     const handleChange = (rowIdx, colIdx, value) => {
         const newMatrix = matrix.map((row, rIdx) =>
@@ -13,17 +14,16 @@ function MatrixPage () {
         );
         setMatrix(newMatrix);
 
+        let newErrors = errors.map(row => [...row]);
         if (!/^-?\d*\.?\d*$/.test(value)) {
-            const newErrors = errors.map((row, rIdx) =>
-                row.map((err, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? "Only numbers allowed" : err))
-            );
-            setErrors(newErrors);
+            newErrors[rowIdx][colIdx] = "Only numbers allowed";
+        // } else if (value.trim() === "") {
+        //     newErrors[rowIdx][colIdx] = "Field cannot be empty";
         } else {
-            const newErrors = errors.map((row, rIdx) =>
-                row.map((err, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? "" : err))
-            );
-            setErrors(newErrors);
+            newErrors[rowIdx][colIdx] = "";
         }
+        setErrors(newErrors);
+        setSubmissionError("");
     };
 
     const handleSubmit = async () => {
@@ -33,12 +33,16 @@ function MatrixPage () {
                 valid = false;
                 return "Field cannot be empty";
             }
+            else if (!/^-?\d*\.?\d*$/.test(cell)) {
+                valid = false;
+                return "Only numbers allowed";
+            }
             return "";
         }));
         setErrors(newErrors);
 
         if (!valid) {
-            alert("Please fill in all fields with valid numbers before submitting.");
+            setSubmissionError("Please ensure all fields contain only numbers and are not empty.");
             return;
         }
 
@@ -56,12 +60,14 @@ function MatrixPage () {
                 console.log("Matrix saved successfully:", data);
                 alert("Matrix saved successfully!");
                 setMatrix(Array(5).fill(Array(5).fill("")));
+                setErrors(Array(5).fill().map(() => Array(5).fill("")));
+                setSubmissionError("");
             } else {
                 throw new Error("Failed to save matrix.");
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("Error saving matrix. Please try again.");
+            setSubmissionError("Error saving matrix. Please try again.");
         }
     };
 
@@ -88,6 +94,8 @@ function MatrixPage () {
                 ))}
             </div>
             <button className="submit-btn" onClick={handleSubmit}>Submit</button>
+            {submissionError && <div className="submission-error">{submissionError}</div>}
+
         </div>
     );
 };

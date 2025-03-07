@@ -5,7 +5,7 @@ function HomePage () {
         <div className="container">
             <h1>Title</h1>
             <Link to="/matrix">
-                <button>Next Page</button>
+                <button className="submit-btn">Next Page</button>
             </Link>
         </div>
     );
