@@ -1,19 +1,47 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
+import "./MatrixInput.css";
 
 function MatrixPage () {
     const navigate = useNavigate();
     const [matrix, setMatrix] = useState(Array(5).fill(Array(5).fill("")));
+    const [errors, setErrors] = useState(Array(5).fill(Array(5).fill("")));
 
-    const handleChange = (row, col, value) => {
-        const newMatrix = matrix.map((r, rIdx) =>
-            rIdx === row ? r.map((c, cIdx) => (cIdx === col ? value : c)) : r
+    const handleChange = (rowIdx, colIdx, value) => {
+        const newMatrix = matrix.map((row, rIdx) =>
+            row.map((cell, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? value : cell))
         );
         setMatrix(newMatrix);
+
+        if (!/^-?\d*\.?\d*$/.test(value)) {
+            const newErrors = errors.map((row, rIdx) =>
+                row.map((err, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? "Only numbers allowed" : err))
+            );
+            setErrors(newErrors);
+        } else {
+            const newErrors = errors.map((row, rIdx) =>
+                row.map((err, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? "" : err))
+            );
+            setErrors(newErrors);
+        }
     };
 
     const handleSubmit = async () => {
-        console.log("Input : ", matrix);
+        let valid = true;
+        const newErrors = matrix.map(row => row.map(cell => {
+            if (cell.trim() === "") {
+                valid = false;
+                return "Field cannot be empty";
+            }
+            return "";
+        }));
+        setErrors(newErrors);
+
+        if (!valid) {
+            alert("Please fill in all fields with valid numbers before submitting.");
+            return;
+        }
+
         try {
             const response = await fetch("https://node-g8h4gherfbejfqbq.eastus2-01.azurewebsites.net/storeMatrix", {
                 method: "POST",
@@ -39,23 +67,27 @@ function MatrixPage () {
 
     return (
         <div className="container">
+            <button className="back-btn" onClick={() => navigate(-1)}>Back</button>
             <h1>Matrix Input</h1>
-            <button onClick={() => navigate(-1)}>Back</button>
+
             <div className="matrix-container">
                 {matrix.map((row, rowIndex) => (
                     <div key={rowIndex} className="matrix-row">
                         {row.map((cell, colIndex) => (
-                            <input
-                                key={colIndex}
-                                type="text"
-                                value={cell}
-                                onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
-                            />
+                            <div key={colIndex} className="matrix-cell">
+                                <input
+                                    type="text"
+                                    value={cell}
+                                    onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
+                                    className={errors[rowIndex][colIndex] ? "input-error" : ""}
+                                />
+                                {errors[rowIndex][colIndex] && <span className="error-text">{errors[rowIndex][colIndex]}</span>}
+                            </div>
                         ))}
                     </div>
                 ))}
             </div>
-            <button onClick={handleSubmit}>Submit</button>
+            <button className="submit-btn" onClick={handleSubmit}>Submit</button>
         </div>
     );
 };
