@@ -1,0 +1,14 @@
+{
+    "routes": [
+        {
+            "route": "/*",
+            "allowedRoles": ["GridS2Users"]
+        }
+    ],
+    "responseOverrides": {
+        "unauthorized": {
+            "statusCode": 401,
+            "redirect": "/login"
+        }
+    }
+}
