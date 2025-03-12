@@ -1,20 +1,9 @@
 {
-  "routes": [
-    {
-      "route": "/*",
-      "statusCode": 401,
-      "allowedRoles": [
-        "GridS2Users",
-        "VisheshPatel",
-        "VishuPatel"
-      ]
-    }
-  ],
   "responseOverrides": {
-        "401": {
-            "statusCode": 302,
-            "redirect": "/ .auth/login/aad"
-        }
+    "401": {
+      "statusCode": 302,
+      "redirect": "/ .auth/login/aad"
+    }
   },
   "auth": {
     "identityProviders": {
@@ -27,5 +16,4 @@
       }
     }
   }
-
 }
