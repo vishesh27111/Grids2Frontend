@@ -9,5 +9,23 @@
         "VishuPatel"
       ]
     }
-  ]
+  ],
+  "responseOverrides": {
+        "401": {
+            "statusCode": 302,
+            "redirect": "/ .auth/login/aad"
+        }
+  },
+  "auth": {
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "registration": {
+          "openIdIssuer": "https://login.microsoftonline.com/473f38e7-f1d8-491c-ad45-a194479a8308/v2.0",
+          "clientIdSettingName": "AZURE_CLIENT_ID",
+          "clientSecretSettingName": "AZURE_CLIENT_SECRET"
+        }
+      }
+    }
+  }
+
 }
