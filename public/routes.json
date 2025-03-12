@@ -2,7 +2,7 @@
     "routes": [
         {
             "route": "/*",
-            "allowedRoles": ["GridS2Users", "VisheshPatel", "VishuPatel"]
+            "allowedRoles": ["authenticated","GridS2Users", "VisheshPatel", "VishuPatel"]
         }
     ],
     "responseOverrides": {
