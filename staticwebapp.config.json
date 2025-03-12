@@ -1,1 +1,14 @@
-{}
+{
+  "routes": [
+    {
+      "route": "/*",
+      "statusCode": 401,
+      "allowedRoles": [
+        "authenticated",
+        "GridS2Users",
+        "VisheshPatel",
+        "VishuPatel"
+      ]
+    }
+  ]
+}
